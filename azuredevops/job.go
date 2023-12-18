@@ -12,14 +12,16 @@ type PipelineRunRequest struct {
 	Definition struct {
 		ID int `json:"id"`
 	} `json:"definition"`
+	Parameters string `json:"parameters"`
 }
 
-func TriggerJob(username, password, organization, project string, pipelineId int) (int, error) {
+func TriggerJob(username, password, organization, project string, pipelineId int, parameters string) (int, error) {
 	url := fmt.Sprintf("https://dev.azure.com/%s/%s/_apis/pipelines/%d/runs?api-version=6.0-preview.1", organization, project, pipelineId)
 
 	// Create the request body
 	reqBody := PipelineRunRequest{}
 	reqBody.Definition.ID = pipelineId
+	reqBody.Parameters = parameters
 	jsonReqBody, err := json.Marshal(reqBody)
 	if err != nil {
 		return http.StatusInternalServerError, err

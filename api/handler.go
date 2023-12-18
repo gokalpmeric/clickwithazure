@@ -8,11 +8,11 @@ import (
 )
 
 type JobRequest struct {
-	Username     string `json:"username"`
-	Password     string `json:"password"`
-	Organization string `json:"organization"`
-	Project      string `json:"project"`
-	PipelineID   int    `json:"pipeline_id"`
+	PAT          string                 `json:"pat"`
+	Organization string                 `json:"organization"`
+	Project      string                 `json:"project"`
+	DefinitionID int                    `json:"definition_id"`
+	Parameters   map[string]interface{} `json:"parameters"`
 }
 
 func TriggerJobHandler(c *gin.Context) {
@@ -23,7 +23,7 @@ func TriggerJobHandler(c *gin.Context) {
 		return
 	}
 
-	statusCode, err := azuredevops.TriggerJob(jobReq.Username, jobReq.Password, jobReq.Organization, jobReq.Project, jobReq.PipelineID)
+	statusCode, err := azuredevops.TriggerJob(jobReq.PAT, jobReq.Organization, jobReq.Project, jobReq.DefinitionID, jobReq.Parameters)
 	if err != nil {
 		c.JSON(statusCode, gin.H{"error": err.Error()})
 		return
